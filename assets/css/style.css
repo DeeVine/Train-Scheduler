@@ -1,0 +1,32 @@
+.jumbotron {
+
+}
+
+.row {
+  margin: 0px;
+}
+
+.employee-table, .form-intake {
+  border: solid 1px black;
+  padding: 0px;
+  border-radius: 5px;
+}
+
+.form-group {
+  margin: 15px;
+}
+
+.form-intake {
+  margin-top: 20px;
+}
+
+#form-submission {
+  margin: 15px;
+}
+
+.section-head {
+  background-color: #1176c4;
+  color: white;
+  margin: 0px;
+  padding: 5px;
+} 
