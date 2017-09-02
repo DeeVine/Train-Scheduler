@@ -9,22 +9,14 @@ var config = {
 };
 firebase.initializeApp(config);
 
-
 // Create a variable to reference the database
 var database = firebase.database();
 
-var someName = "some name";
-var someRole = "director";
-var someStartDate = "today";
-var someMonthlyRate = 2000;
-var monthsWorked = someStartDate;
-
-// database.ref().push({
-//     name: someName ,
-//     role: someRole,
-//     startDate: someStartDate ,
-//     monthlyRate: someMonthlyRate  
-//   });
+var trainName = "some name";
+var destination = "director";
+var firstTrainTime = "today";
+var currentTime = moment();
+console.log(currentTime);
 
 $("#submit-button").on("click", function() {
 
@@ -42,48 +34,67 @@ event.preventDefault();
 
 console.log("testing button");
 
-someName = $("#name-input").val().trim();
-console.log(someName);
+trainName = $("#train-name-input").val().trim();
+console.log(trainName);
 
-someRole = $("#role-input").val().trim();
-someStartDate = $("#start-date-input").val().trim();
-someMonthlyRate = $("#monthly-rate-input").val().trim();
+destination = $("#destination-input").val().trim();
+firstTrainTime = $("#first-train-time-input").val().trim();
+tFrequency = $("#frequency-input").val().trim();
 
 database.ref().push({
-    name: someName ,
-    role: someRole,
-    startDate: someStartDate ,
-    monthlyRate: someMonthlyRate  
+    name: trainName ,
+    destination: destination,
+    firstTrainTime: firstTrainTime,
+    frequency: tFrequency  
   });
 
 });
 
 database.ref().on("child_added", function(childSnapshot) {
+    
+//use moment.js to calculate time difference and time till next train
+  var tFrequency = childSnapshot.val().frequency;
+
+  // Time is 3:30 AM
+  var firstTrainTime = childSnapshot.val().firstTrainTime;
+
+  // First Time (pushed back 1 year to make sure it comes before current time)
+  var firstTimeConverted = moment(firstTrainTime, "hh:mm").subtract(1, "years");
+  console.log(firstTimeConverted);
+
+  // Current Time
+  var currentTime = moment();
+  console.log("CURRENT TIME: " + moment(currentTime).format("hh:mm"));
+
+  // Difference between the times
+  var diffTime = moment().diff(moment(firstTimeConverted), "minutes");
+  console.log("DIFFERENCE IN TIME: " + diffTime);
+
+  // Time apart (remainder)
+  var tRemainder = diffTime % tFrequency;
+  console.log(tRemainder);
+
+  // Minute Until Train
+  var tMinutesTillTrain = tFrequency - tRemainder;
+  console.log("MINUTES TILL TRAIN: " + tMinutesTillTrain);
+
+  // Next Train
+  var nextTrain = moment().add(tMinutesTillTrain, "minutes");
+  console.log("ARRIVAL TIME: " + moment(nextTrain).format("hh:mm"));    
+
     // Log everything that's coming out of snapshot
-console.log(childSnapshot.val().name);
-console.log(childSnapshot.val().role);
-console.log(childSnapshot.val().startDate);
-console.log(childSnapshot.val().monthlyRate);
-// full list of items to the well
-$("#table-body").append("<tr>" + "<td class = 'table-name'>" + childSnapshot.val().name + "</td>" + 
-  "<td class = 'table-name'>" + childSnapshot.val().role + "</td>" + 
-  "<td class = 'table-name'>" + childSnapshot.val().startDate + "</td>" + 
-  "<td class = 'table-name'>" + childSnapshot.val().monthlyRate + "</td>" +  "</tr>");
+  console.log(childSnapshot.val().name);
+  console.log(childSnapshot.val().destination);
+  console.log(childSnapshot.val().firstTrainTime);
+  console.log(childSnapshot.val().tFrequency);
+  // full list of items to the well
+  $("#table-body").append("<tr>" + "<td class = 'table-name'>" + childSnapshot.val().name + "</td>" + 
+    "<td class = 'table-name'>" + childSnapshot.val().destination + "</td>" + 
+    "<td class = 'table-name'>" + childSnapshot.val().frequency + "</td>" +
+    "<td class = 'table-name'>" + moment(nextTrain).format("hh:mm") + "</td>" +
+    "<td class = 'table-name'>" + tMinutesTillTrain + "</td>" +  "</tr>");
 
-//use moment.js to calculate number of days between today and submitted date
-var randomDate = childSnapshot.val().startDate;
-var randomFormat = "MM/DD/YYYY";
-var convertedDate = moment(randomDate, randomFormat);
-var numberOfDays = moment(convertedDate).diff(moment(), "days");
-console.log(numberOfDays);
-
-// Handle the errors
-}, function(errorObject) {
-console.log("Errors handled: " + errorObject.code);
+  // Handle the errors
+  }, function(errorObject) {
+  console.log("Errors handled: " + errorObject.code);
 });
-
-// var randomDate = "02/23/1999";
-// var randomFormat = "MM/DD/YYYY";
-// var convertedDate = moment(randomDate, randomFormat);
-// var numberOfDays = moment(convertedDate).diff(moment(), "days");
-// console.log(numberOfDays);
