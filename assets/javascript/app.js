@@ -12,18 +12,11 @@ firebase.initializeApp(config);
 // Create a variable to reference the database
 var database = firebase.database();
 
-var trainName = "some name";
-var destination = "director";
-var firstTrainTime = "today";
-var currentTime = moment();
-
 $("#form-submission").on("click", function(event) {
 // Prevent default behavior
 event.preventDefault();
 
 trainName = $("#train-name-input").val().trim();
-console.log(trainName);
-
 destination = $("#destination-input").val().trim();
 firstTrainTime = $("#first-train-time-input").val().trim();
 tFrequency = $("#frequency-input").val().trim();
@@ -34,7 +27,6 @@ database.ref().push({
     firstTrainTime: firstTrainTime,
     frequency: tFrequency  
   });
-
 });
 
 database.ref().on("child_added", function(childSnapshot) {
