@@ -16,23 +16,10 @@ var trainName = "some name";
 var destination = "director";
 var firstTrainTime = "today";
 var currentTime = moment();
-console.log(currentTime);
-
-$("#submit-button").on("click", function() {
-
-// Prevent default behavior
-event.preventDefault();
-
-console.log("this works");
-});
 
 $("#form-submission").on("click", function(event) {
-// This line allows us to take advantage of the HTML "submit" property
-// This way we can hit enter on the keyboard and it registers the search
-// (in addition to clicks).
+// Prevent default behavior
 event.preventDefault();
-
-console.log("testing button");
 
 trainName = $("#train-name-input").val().trim();
 console.log(trainName);

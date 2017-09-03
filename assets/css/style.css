@@ -1,5 +1,16 @@
-.jumbotron {
+body {
+  margin-bottom: 10px;
+}
 
+th {
+  text-align: center;
+}
+
+.jumbotron {
+  margin-top: 5px;
+  background-color: #5bdcb4;
+  text-align: center;
+  border: solid 1px;
 }
 
 .row {
@@ -10,6 +21,7 @@
   border: solid 1px black;
   padding: 0px;
   border-radius: 5px;
+  text-align: center;
 }
 
 .form-group {
@@ -30,3 +42,11 @@
   margin: 0px;
   padding: 5px;
 } 
+
+.table {
+  text-align: center;
+}
+
+#table-body {
+  text-align: center;
+}
